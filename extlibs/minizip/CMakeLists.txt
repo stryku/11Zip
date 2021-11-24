@@ -4,15 +4,18 @@ file(GLOB MZIP_HEADERS include/minizip/*.h)
 file(GLOB MZIP_SOURCES src/*.c)
 
 if (NOT WIN32)
+    message("Removing WIN32 sources")
     list(REMOVE_ITEM MZIP_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/mz_crypt_win32.c)
     list(REMOVE_ITEM MZIP_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/mz_os_win32.c)
     list(REMOVE_ITEM MZIP_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/mz_strm_os_win32.c)
 ENDIF()
-if (NOT POSIX)
+if (NOT POSIX AND NOT UNIX)
+    message("Removing POSIX sources")
     list(REMOVE_ITEM MZIP_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/mz_os_posix.c)
     list(REMOVE_ITEM MZIP_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/mz_strm_os_posix.c)
 endif()
 if (NOT APPLE)
+    message("Removing APPLE sources")
     list(REMOVE_ITEM MZIP_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/mz_crypt_apple.c)
 endif()
 
@@ -21,7 +24,7 @@ add_library(minizip ${MZIP_HEADERS} ${MZIP_SOURCES})
 target_link_libraries(minizip zlib)
 
 target_compile_definitions(minizip PUBLIC HAVE_ZLIB)
-target_compile_definitions(minizip PUBLIC HAVE_WZAES)
+# target_compile_definitions(minizip PUBLIC HAVE_WZAES)
 
 target_include_directories(minizip
     PUBLIC 
